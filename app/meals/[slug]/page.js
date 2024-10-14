@@ -3,18 +3,33 @@ import classes from './page.module.css';
 import { getMeal } from '@/lib/meals';
 import { notFound } from 'next/navigation';
 
+export async function generateMetadata({ params }) {
+  const meal = getMeal(params.slug);
+  if (!meal) {
+    notFound();
+  }
+  return {
+    title: meal.title,
+    description: meal.summary,
+  };
+}
+
 export default function SingleMeal({ params }) {
   const meal = getMeal(params.slug);
   if (!meal) {
     notFound();
   }
+  const IMG_URL_PATH =
+    process.env.APP_ENV === 'production'
+      ? `https://foodlover-app-nextjs.s3.amazonaws.com/${meal.image}`
+      : meal.image;
   meal.instructions = meal.instructions.replace(/\n/g, '<br/>');
   return (
     <>
       <header className={classes.header}>
         <div className={classes.image}>
           <Image
-            src={meal.image}
+            src={IMG_URL_PATH}
             alt={meal.title}
             fill
           />

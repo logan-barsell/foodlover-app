@@ -4,12 +4,16 @@ import Image from 'next/image';
 import classes from './meal-item.module.css';
 
 export default function MealItem({ title, slug, image, summary, creator }) {
+  const IMG_URL_PATH =
+    process.env.APP_ENV === 'production'
+      ? `https://foodlover-app-nextjs.s3.amazonaws.com/${image}`
+      : image;
   return (
     <article className={classes.meal}>
       <header>
         <div className={classes.image}>
           <Image
-            src={image}
+            src={IMG_URL_PATH}
             alt={title}
             fill
           />
